@@ -13,6 +13,7 @@ def calculate_euclidean_distance(
     compare_count=5,
     start_date=date(year=2020, month=4, day=1),
     end_date=date(year=2020, month=5, day=1),
+    filter_on_continent=True,
 ):
     total_days = (end_date - start_date).days
     # Load data
@@ -49,15 +50,16 @@ def calculate_euclidean_distance(
         )
     )
 
-    alpha2_name = pc.country_name_to_country_alpha2(focal_country)
-    continent = pc.country_alpha2_to_continent_code(alpha2_name)
-    # Filter on continent
-    euclidean_distance_srt = list(
-        filter(
-            lambda country: filter_continent(country, continent),
-            euclidean_distance_srt,
+    if filter_on_continent:
+        alpha2_name = pc.country_name_to_country_alpha2(focal_country)
+        continent = pc.country_alpha2_to_continent_code(alpha2_name)
+        # Filter on continent
+        euclidean_distance_srt = list(
+            filter(
+                lambda country: filter_continent(country, continent),
+                euclidean_distance_srt,
+            )
         )
-    )
 
     # Plot the result
     plot_result(

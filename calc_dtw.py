@@ -13,6 +13,7 @@ def calculate_dtw_distance(
     compare_count=5,
     start_date=date(year=2020, month=4, day=1),
     end_date=date(year=2020, month=5, day=1),
+    filter_on_continent=True,
 ):
     total_days = (end_date - start_date).days
     df_period = prepare_data(start_date, end_date)
@@ -20,10 +21,14 @@ def calculate_dtw_distance(
     country = df_period_group.get_group(focal_country)
     dtw_df = execute_dtw(df_period_group, country)
 
-    # Filter by continent
-    alpha2_name = pc.country_name_to_country_alpha2(focal_country)
-    continent = pc.country_alpha2_to_continent_code(alpha2_name)
-    plot_result(dtw_df, df_period_group, focal_country, continent, total_days)
+    plot_result(
+        dtw_df,
+        df_period_group,
+        focal_country,
+        filter_on_continent,
+        total_days,
+        compare_count,
+    )
 
 
 def prepare_data(start_date, end_date, oxcgrt="OxCGRT_latest.csv"):
@@ -70,17 +75,30 @@ def execute_dtw(df_period_group, compare_group):
     return dtw_df
 
 
-def plot_result(dtw_df, df_period_group, focal_country, continent, total_days):
-    nd_sort = dtw_df.loc[dtw_df["Continent"] == continent].sort_values(
-        by=["Normalized_distance"]
-    )
+def plot_result(
+    dtw_df,
+    df_period_group,
+    focal_country,
+    filter_on_continent,
+    total_days,
+    compare_count,
+):
+    # Filter by continent
+    if filter_on_continent:
+        alpha2_name = pc.country_name_to_country_alpha2(focal_country)
+        continent = pc.country_alpha2_to_continent_code(alpha2_name)
+        nd_sort = dtw_df.loc[dtw_df["Continent"] == continent].sort_values(
+            by=["Normalized_distance"]
+        )
+    else:
+        nd_sort = dtw_df.sort_values(by=["Normalized_distance"])
     fig, ax = plt.subplots(figsize=(10, 5))
     fig.suptitle("Top-4: Dynamic Time Warping")
 
     time_series = np.arange(total_days)
     i = 0
     for _, row in nd_sort.iterrows():
-        if i == 5:
+        if i == compare_count:
             break
         country = row["Country"]
         linewidth = 8 if country == focal_country else 3
