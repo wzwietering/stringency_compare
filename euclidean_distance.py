@@ -61,6 +61,8 @@ def calculate_euclidean_distance(
             )
         )
 
+    print(euclidean_distance_srt[:compare_count])
+
     # Plot the result
     plot_result(
         euclidean_distance_srt,

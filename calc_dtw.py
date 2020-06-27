@@ -92,6 +92,7 @@ def plot_result(
         )
     else:
         nd_sort = dtw_df.sort_values(by=["Normalized_distance"])
+    print(nd_sort[:compare_count])
     fig, ax = plt.subplots(figsize=(10, 5))
     fig.suptitle("Top-4: Dynamic Time Warping")
 
