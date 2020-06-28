@@ -16,6 +16,8 @@ start_date = date(year=2020, month=4, day=1)  # Start of analysis period
 end_date = date(year=2020, month=5, day=1)  # End of analysis period
 filter_on_continent = True  # Only compare countries in the same continent
 
+# test by bart
+
 calculate_euclidean_distance(
     country, min_pop, compare_count, start_date, end_date, filter_on_continent
 )
