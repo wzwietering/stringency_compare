@@ -1,3 +1,4 @@
+from datetime import date
 import os
 
 from download_data import download_data
@@ -9,7 +10,15 @@ if not os.path.exists("OxCGRT_latest.csv") or not os.path.exists("worldPop2020.c
 
 # Enter the countries to analyse below
 country = "Netherlands"
-filter_on_continent = True
+min_pop = 3e5  # Minimum population size
+compare_count = 5  # Top k similar countries to find
+start_date = date(year=2020, month=4, day=1)  # Start of analysis period
+end_date = date(year=2020, month=5, day=1)  # End of analysis period
+filter_on_continent = True  # Only compare countries in the same continent
 
-calculate_euclidean_distance(country, filter_on_continent=filter_on_continent)
-calculate_dtw_distance(country, filter_on_continent=filter_on_continent)
+calculate_euclidean_distance(
+    country, min_pop, compare_count, start_date, end_date, filter_on_continent
+)
+calculate_dtw_distance(
+    country, min_pop, compare_count, start_date, end_date, filter_on_continent
+)
